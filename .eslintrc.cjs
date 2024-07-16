@@ -1,0 +1,35 @@
+module.exports = {
+  root: true,
+  env: { browser: true, es2020: true },
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
+    'plugin:react-hooks/recommended',
+    'eslint-config-prettier',
+  ],
+  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  parser: '@typescript-eslint/parser',
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+  plugins: ['@typescript-eslint', 'react-refresh', 'import'],
+  rules: {
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
+    'import/newline-after-import': ['error', { count: 1 }],
+    'react/jsx-filename-extension': [
+      1,
+      { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+    ],
+    'react/react-in-jsx-scope': 'off',
+    'no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'react/prop-types': 0,
+    'no-console': 'warn',
+    'no-alert': 'warn',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    'import/prefer-default-export': 'off',
+  },
+};
