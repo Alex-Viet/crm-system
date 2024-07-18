@@ -1,25 +1,65 @@
 import React, { useEffect } from 'react';
-import { fetchComments, fetchDesigners, fetchIssues } from '../../api/api';
+import { CommentsData, fetchCommentsThunk } from '../../slices/commentsSlice';
+import { RootState } from '../../store/store';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { Card, CardContent, Avatar, Typography } from '@mui/material';
 
 export const HomePage: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  const {
+    data: comments,
+    error,
+    status,
+  } = useAppSelector((state: RootState) => state.comments);
+
+  const lastComments = comments.slice(0, 10);
+
   useEffect(() => {
-    const fetchData = async () => {
-      // const commentsData = await fetchComments();
-      // console.log(commentsData);
+    dispatch(fetchCommentsThunk());
+  }, [dispatch]);
 
-      // const designersData = await fetchDesigners();
-      // console.log(designersData);
+  if (status === 'loading') {
+    return (
+      <Typography variant="h4" sx={{ paddingLeft: '1rem', paddingTop: '2rem' }}>
+        Loading...
+      </Typography>
+    );
+  }
 
-      // const issuesData = await fetchIssues();
-      // console.log(issuesData);
-    };
-
-    fetchData();
-  }, []);
+  if (error) {
+    return (
+      <Typography
+        variant="h4"
+        color="red"
+        sx={{ paddingLeft: '1rem', paddingTop: '2rem' }}
+      >
+        {error}
+      </Typography>
+    );
+  }
 
   return (
     <div>
-      <h1>Home page</h1>
+      <section>
+        <Typography variant="h4" sx={{ padding: '2rem 0.5rem' }}>
+          Последние комментарии
+        </Typography>
+        {lastComments.map((comment: CommentsData) => (
+          <Card key={comment.id}>
+            <CardContent>
+              <Avatar
+                src={comment.designer.avatar ? comment.designer.avatar : ''}
+                alt={comment.designer.username}
+              />
+              <Typography variant="h6">{comment.designer.username}</Typography>
+              <Typography variant="body2">{comment.date_created}</Typography>
+              <Typography variant="body2">{comment.issue}</Typography>
+              <Typography variant="body2">{comment.message}</Typography>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
     </div>
   );
 };

@@ -26,7 +26,11 @@ export const fetchIssues = async () => {
 
 export const fetchComments = async () => {
   try {
-    const response = await axios.get(`${API_URL}comment/`);
+    const response = await axios.get(`${API_URL}comment/`, {
+      params: {
+        ordering: '-date_created',
+      },
+    });
 
     return response.data;
   } catch (error) {
