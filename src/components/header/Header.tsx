@@ -16,16 +16,26 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    const currentDate = new Date();
-    const weekNumber = getWorkWeekNumber(currentDate);
-    setWorkWeekNumber(weekNumber);
+    const updateWeekNumber = () => {
+      const currentDate = new Date();
+      const weekNumber = getWorkWeekNumber(currentDate);
+      setWorkWeekNumber(weekNumber);
+    };
+
+    updateWeekNumber();
+
+    const intervalId = setInterval(updateWeekNumber, 60000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
     <AppBar position="static">
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Typography variant="h5">CRM System</Typography>
-        <Typography variant="h5">Work Week: {workWeekNumber}</Typography>
+        <Typography variant="h5">
+          Work Week: {workWeekNumber ? workWeekNumber : ''}
+        </Typography>
         <Switch
           checked={currentTheme === 'dark'}
           onChange={handleThemeChange}
