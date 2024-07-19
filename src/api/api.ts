@@ -1,17 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_APP_API_URL;
-
-export const fetchDesigners = async () => {
-  try {
-    const response = await axios.get(`${API_URL}designer/`);
-
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching designers:', error);
-    throw error;
-  }
-};
+export const API_URL: string = import.meta.env.VITE_APP_API_URL;
 
 export const fetchIssues = async () => {
   try {
