@@ -1,10 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchCommentsThunk } from '../../slices/commentsSlice';
 import { RootState } from '../../store/store';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { Card, CardContent, Typography, Avatar, Box } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Avatar,
+  Box,
+  Link,
+} from '@mui/material';
+import { truncateText } from '../../utils/trancText';
 
 export const CommentsCard: React.FC = () => {
+  const [expandedComments, setExpandedComments] = useState<{
+    [key: number]: boolean;
+  }>({});
+
   const dispatch = useAppDispatch();
 
   const {
@@ -18,6 +30,13 @@ export const CommentsCard: React.FC = () => {
   useEffect(() => {
     dispatch(fetchCommentsThunk());
   }, [dispatch]);
+
+  const toggleExpand = (id: number) => {
+    setExpandedComments((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   if (status === 'loading') {
     return (
@@ -46,26 +65,49 @@ export const CommentsCard: React.FC = () => {
           <Typography variant="h4">Последние комментарии</Typography>
         </CardContent>
       </Card>
-      {lastComments.map((comment) => (
-        <Card key={comment.id} sx={{ marginBottom: '1rem' }}>
-          <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar
-                src={comment.designer.avatar ? comment.designer.avatar : ''}
-                alt={comment.designer.username}
-              />
-              <Box sx={{ marginLeft: '1rem' }}>
-                <Typography variant="h6">
-                  {comment.designer.username}
-                </Typography>
-                <Typography variant="body2">{comment.date_created}</Typography>
-                <Typography variant="body2">{comment.issue}</Typography>
-                <Typography variant="body2">{comment.message}</Typography>
+      {lastComments.map((comment) => {
+        const isExpanded = expandedComments[comment.id];
+        return (
+          <Card key={comment.id} sx={{ marginBottom: '1rem' }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Avatar
+                  src={comment.designer.avatar ? comment.designer.avatar : ''}
+                  alt={comment.designer.username}
+                />
+                <Box sx={{ marginLeft: '1rem' }}>
+                  <Typography variant="h6">
+                    {comment.designer.username}
+                  </Typography>
+                  <Typography variant="body2">
+                    {comment.date_created}
+                  </Typography>
+                  <Typography variant="body2">{comment.issue}</Typography>
+                  <Typography variant="body2">
+                    {isExpanded
+                      ? comment.message
+                      : comment.message && truncateText(comment.message, 200)}
+                    {comment.message && comment.message.length > 200 && (
+                      <Link
+                        component="button"
+                        variant="body2"
+                        sx={{
+                          color: 'primary.main',
+                          fontWeight: 'bold',
+                          marginLeft: '0.5rem',
+                        }}
+                        onClick={() => toggleExpand(comment.id)}
+                      >
+                        {isExpanded ? 'Скрыть' : 'Развернуть'}
+                      </Link>
+                    )}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        );
+      })}
     </Box>
   );
 };
