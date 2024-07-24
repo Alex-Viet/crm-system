@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { Card, CardContent, Avatar, Typography } from '@mui/material';
 import { fetchAllDesignersThunk } from '../../slices/designersSlice';
 import { RootState } from '../../store/store';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { calculateMedian } from '../../utils/calcMedian';
+import { Card, CardContent, Typography, Avatar, Box } from '@mui/material';
 
 export const TopDesignersCard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -72,30 +72,34 @@ export const TopDesignersCard: React.FC = () => {
     .slice(0, 10);
 
   return (
-    <>
-      <Card>
-        <Typography variant="h4" sx={{ padding: '2rem 0.5rem' }}>
-          Топ 10 дизайнеров
-        </Typography>
+    <Box>
+      <Card sx={{ marginBottom: '1rem' }}>
+        <CardContent>
+          <Typography variant="h4">Топ 10 дизайнеров</Typography>
+        </CardContent>
       </Card>
       {sortedDesigners.map((designer) => (
-        <Card key={designer.username}>
+        <Card key={designer.username} sx={{ marginBottom: '1rem' }}>
           <CardContent>
-            <Avatar
-              src={designer.avatar ? designer.avatar : ''}
-              alt={designer.username}
-            />
-            <Typography variant="h6">{designer.username}</Typography>
-            <Typography variant="body2">
-              Медианное время: {Math.floor(designer.medianTime / 1000 / 60)}{' '}
-              minutes
-            </Typography>
-            <Typography variant="body2">
-              Выполненные задачи: {designer.completedTasks}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar
+                src={designer.avatar ? designer.avatar : ''}
+                alt={designer.username}
+              />
+              <Box sx={{ marginLeft: '1rem' }}>
+                <Typography variant="h6">{designer.username}</Typography>
+                <Typography variant="body2">
+                  Медианное время: {Math.floor(designer.medianTime / 1000 / 60)}{' '}
+                  минут
+                </Typography>
+                <Typography variant="body2">
+                  Выполненные задачи: {designer.completedTasks}
+                </Typography>
+              </Box>
+            </Box>
           </CardContent>
         </Card>
       ))}
-    </>
+    </Box>
   );
 };

@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { Card, CardContent, Avatar, Typography } from '@mui/material';
-import { CommentsData } from '../../slices/commentsSlice';
 import { fetchCommentsThunk } from '../../slices/commentsSlice';
 import { RootState } from '../../store/store';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { Card, CardContent, Typography, Avatar, Box } from '@mui/material';
 
 export const CommentsCard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -41,26 +40,32 @@ export const CommentsCard: React.FC = () => {
   }
 
   return (
-    <>
-      <Card>
-        <Typography variant="h4" sx={{ padding: '2rem 0.5rem' }}>
-          Последние комментарии
-        </Typography>
+    <Box>
+      <Card sx={{ marginBottom: '1rem' }}>
+        <CardContent>
+          <Typography variant="h4">Последние комментарии</Typography>
+        </CardContent>
       </Card>
-      {lastComments.map((comment: CommentsData) => (
-        <Card key={comment.id}>
+      {lastComments.map((comment) => (
+        <Card key={comment.id} sx={{ marginBottom: '1rem' }}>
           <CardContent>
-            <Avatar
-              src={comment.designer.avatar ? comment.designer.avatar : ''}
-              alt={comment.designer.username}
-            />
-            <Typography variant="h6">{comment.designer.username}</Typography>
-            <Typography variant="body2">{comment.date_created}</Typography>
-            <Typography variant="body2">{comment.issue}</Typography>
-            <Typography variant="body2">{comment.message}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar
+                src={comment.designer.avatar ? comment.designer.avatar : ''}
+                alt={comment.designer.username}
+              />
+              <Box sx={{ marginLeft: '1rem' }}>
+                <Typography variant="h6">
+                  {comment.designer.username}
+                </Typography>
+                <Typography variant="body2">{comment.date_created}</Typography>
+                <Typography variant="body2">{comment.issue}</Typography>
+                <Typography variant="body2">{comment.message}</Typography>
+              </Box>
+            </Box>
           </CardContent>
         </Card>
       ))}
-    </>
+    </Box>
   );
 };
