@@ -11,6 +11,8 @@ import {
   Link,
 } from '@mui/material';
 import { truncateText } from '../../utils/trancText';
+import { formatDistanceToNow, parseISO } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 export const CommentsCard: React.FC = () => {
   const [expandedComments, setExpandedComments] = useState<{
@@ -36,6 +38,13 @@ export const CommentsCard: React.FC = () => {
       ...prev,
       [id]: !prev[id],
     }));
+  };
+
+  const getRelativeTime = (dateString: string) => {
+    return formatDistanceToNow(parseISO(dateString), {
+      addSuffix: true,
+      locale: ru,
+    });
   };
 
   if (status === 'loading') {
@@ -80,9 +89,12 @@ export const CommentsCard: React.FC = () => {
                     {comment.designer.username}
                   </Typography>
                   <Typography variant="body2">
-                    {comment.date_created}
+                    {comment.date_created &&
+                      getRelativeTime(comment.date_created)}
                   </Typography>
-                  <Typography variant="body2">{comment.issue}</Typography>
+                  <Typography variant="body2" sx={{ marginY: '0.5rem' }}>
+                    Задача: {comment.issue}
+                  </Typography>
                   <Typography variant="body2">
                     {isExpanded
                       ? comment.message
